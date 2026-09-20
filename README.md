@@ -140,3 +140,21 @@ See `docs/ARCHITECTURE.md` for the planner, API and limitations, and `docs/ROADM
 This prototype deliberately has no accounts. Operator endpoints and trip IDs are not an authorization system. Add authentication, trip ownership checks, operator roles, request limits and an appropriate deployment/database configuration before exposing it publicly.
 
 Map tiles are loaded from OpenStreetMap's public tile service with attribution. Follow its usage policy; do not add bulk downloading or offline tile prefetching to that service. Select a suitable provider before scaling. Fonts load from Google Fonts; self-host them if needed.
+
+## Help and problem reports
+
+Use **Help & contacts** for click-to-call links to Nepal Police (100, within Nepal)
+and Bharatpur Hospital's general contact (+977 56-597003). Official sources were
+checked on 20 September 2026:
+- https://www.nepalpolice.gov.np/stations/emergency-contacts/
+- https://online.bharatpurhospital.gov.np/
+
+Nearby hospital/police links open Google Maps searches; Pulse does not rank services,
+verify current availability or dispatch assistance. Device calling support is required.
+
+The non-emergency form saves to the `problem_reports` database table. Operator demo
+shows the latest 100 reports. `POST /api/reports` validates category and field lengths;
+`GET /api/reports` reads the local inbox. Reports are not delivered to authorities.
+The demo inbox has no authentication: do not enter sensitive data or expose the API
+publicly. Add authenticated operator access, rate limits and a retention policy first.
+Restart the backend after updating so schema initialization creates the new table.

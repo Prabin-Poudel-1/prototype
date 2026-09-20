@@ -29,6 +29,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import MapView from "./MapView";
+import HelpSection, { ReportInbox } from "./HelpSection";
 import {
   api,
   money,
@@ -41,7 +42,9 @@ import {
 } from "./types";
 import "./styles.css";
 function App() {
-  const [view, setView] = useState<"plan" | "operator" | "about">("plan");
+  const [view, setView] = useState<"plan" | "operator" | "about" | "help">(
+    "plan",
+  );
   const [activities, setActivities] = useState<ActivityView[]>([]),
     [trip, setTrip] = useState<Trip | null>(null),
     [recovery, setRecovery] = useState<Recovery | null>(null),
@@ -237,6 +240,13 @@ function App() {
         <div className="sidebar-label">YOUR JOURNEY</div>
         <nav>
           <button
+            className={view === "help" ? "nav-active" : ""}
+            onClick={() => setView("help")}
+          >
+            <ShieldCheck size={20} />
+            Help & contacts
+          </button>
+          <button
             className={view === "plan" ? "nav-active" : ""}
             onClick={() => setView("plan")}
           >
@@ -284,7 +294,9 @@ function App() {
                 ? "Trip workspace"
                 : view === "operator"
                   ? "Operator demo"
-                  : "Prototype notes"}
+                  : view === "help"
+                    ? "Help & contacts"
+                    : "Prototype notes"}
             </strong>
           </div>
           <div className={`connection ${connected ? "online" : ""}`}>
@@ -773,6 +785,8 @@ function App() {
               </section>
             </div>
           </>
+        ) : view === "help" ? (
+          <HelpSection />
         ) : view === "operator" ? (
           <section className="secondary-page">
             <div className="eyebrow">CONNECTED DEMONSTRATION</div>
@@ -786,6 +800,7 @@ function App() {
               Local demo controls only. No real operator is connected and no
               reservation is created.
             </div>
+            <ReportInbox />
             <div className="operator-grid">
               {activities.map(({ activity: a, available, updatedAt }) => (
                 <article className="operator-card" key={a.id}>
