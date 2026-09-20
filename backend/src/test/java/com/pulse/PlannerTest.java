@@ -1,0 +1,103 @@
+package com.pulse;
+
+import static com.pulse.Models.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.*;
+import org.junit.jupiter.api.Test;
+
+class PlannerTest {
+  final Planner planner = new Planner();
+  final Catalog catalog = new Catalog();
+
+  Preferences prefs(int people, int budget, int hours, String culture, boolean walking) {
+    return new Preferences("2026-10-10", people, budget, hours, "bird", culture, walking);
+  }
+
+  @Test
+  void plansRespectConstraintsAcrossBudgetsGroupsAndTimeLimits() {
+    int feasible = 0;
+    for (int group = 1; group <= 8; group++)
+      for (int budget : new int[] {500, 2000, 4500, 8000, 15000})
+        for (int hours : new int[] {2, 4, 6, 10}) {
+          Preferences p = prefs(group, budget, hours, "exclude", true);
+          var result = planner.plan(p, catalog.all(), Set.of());
+          if (result.isEmpty()) continue;
+          feasible++;
+          Plan plan = result.get();
+          assertTrue(plan.totalCost() <= budget);
+          assertTrue(plan.totalMinutes() <= hours * 60);
+          assertEquals(plan.totalCost(), plan.activityCost() + plan.transportCost());
+          assertTrue(plan.stops().stream().anyMatch(s -> s.activity().kind().equals("bird")));
+          assertTrue(
+              plan.stops().stream()
+                  .allMatch(
+                      s -> s.activity().lowWalking() && !s.activity().kind().equals("culture")));
+          assertEquals(
+              plan.stops().size(),
+              plan.stops().stream().map(s -> s.activity().id()).distinct().count());
+          int last = 480;
+          for (Stop stop : plan.stops()) {
+            assertTrue(stop.arrival() >= last + stop.travelMinutes());
+            assertTrue(stop.arrival() >= stop.activity().openMinute());
+            assertTrue(stop.departure() <= stop.activity().closeMinute());
+            assertEquals(stop.activityCost(), group * stop.activity().pricePerPerson());
+            last = stop.departure();
+          }
+          assertTrue(plan.returnMinute() > last);
+        }
+    assertTrue(feasible > 30);
+  }
+
+  @Test
+  void impossibleBudgetDoesNotInventAPlan() {
+    assertTrue(
+        planner.plan(prefs(8, 500, 2, "optional", false), catalog.all(), Set.of()).isEmpty());
+  }
+
+  @Test
+  void mandatoryCultureIsIncluded() {
+    Plan plan =
+        planner.plan(prefs(2, 12000, 8, "include", false), catalog.all(), Set.of()).orElseThrow();
+    assertTrue(plan.stops().stream().anyMatch(s -> s.activity().kind().equals("culture")));
+  }
+
+  @Test
+  void unavailableBirdActivitiesCannotBeReplacedWithUnrelatedInterests() {
+    assertTrue(
+        planner
+            .plan(
+                prefs(2, 15000, 8, "optional", false),
+                catalog.all().stream().filter(a -> !a.kind().equals("bird")).toList(),
+                Set.of())
+            .isEmpty());
+  }
+
+  @Test
+  void repairRemovesCancelledActivityAndRetainsFocus() {
+    Preferences p = prefs(2, 6500, 6, "optional", false);
+    Plan first = planner.plan(p, catalog.all(), Set.of()).orElseThrow();
+    String cancelled = first.stops().getFirst().activity().id();
+    Set<String> preserve =
+        new HashSet<>(first.stops().stream().map(s -> s.activity().id()).toList());
+    Plan next =
+        planner
+            .plan(
+                p, catalog.all().stream().filter(a -> !a.id().equals(cancelled)).toList(), preserve)
+            .orElseThrow();
+    assertTrue(next.stops().stream().noneMatch(s -> s.activity().id().equals(cancelled)));
+    assertTrue(next.stops().stream().anyMatch(s -> s.activity().kind().equals("bird")));
+  }
+
+  @Test
+  void conflictingAndMalformedPreferencesAreRejected() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> planner.validate(new Preferences("bad", 2, 5000, 6, "bird", "optional", false)));
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            planner.validate(
+                new Preferences("2026-10-10", 2, 5000, 6, "culture", "exclude", false)));
+  }
+}
