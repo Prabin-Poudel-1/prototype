@@ -240,13 +240,6 @@ function App() {
         <div className="sidebar-label">YOUR JOURNEY</div>
         <nav>
           <button
-            className={view === "help" ? "nav-active" : ""}
-            onClick={() => setView("help")}
-          >
-            <ShieldCheck size={20} />
-            Help & contacts
-          </button>
-          <button
             className={view === "plan" ? "nav-active" : ""}
             onClick={() => setView("plan")}
           >
@@ -260,6 +253,13 @@ function App() {
           >
             <Settings2 size={20} />
             Operator demo
+          </button>
+          <button
+            className={view === "help" ? "nav-active" : ""}
+            onClick={() => setView("help")}
+          >
+            <ShieldCheck size={20} />
+            Help & contacts
           </button>
           <button
             className={view === "about" ? "nav-active" : ""}
