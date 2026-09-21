@@ -8,7 +8,7 @@ A working first prototype for interest-led day planning in Bharatpur, with a map
 
 - React + TypeScript frontend with a responsive tourist workspace and Leaflet map.
 - Java 21-compatible Spring Boot backend.
-- Constraint search across a sample catalogue of seven experiences.
+- Constraint search across a sample catalogue of eleven experiences.
 - Group-wide budget, time, opening-window, main-interest, optional-culture and sample low-walking checks.
 - Estimated transfers and return to a fixed sample base.
 - Saved itineraries and activity status in a database.
@@ -17,7 +17,7 @@ A working first prototype for interest-led day planning in Bharatpur, with a map
 - Replacement preview and explicit acceptance, protected against stale revisions and changed availability.
 - Optional foreground device location, with permission. Coordinates are not sent to the backend.
 - Downloadable text itinerary.
-- Eight backend tests, including a 160-combination constraint sweep.
+- Eleven backend tests, including a 160-combination constraint sweep.
 
 ## Important data boundaries
 
@@ -158,3 +158,29 @@ shows the latest 100 reports. `POST /api/reports` validates category and field l
 The demo inbox has no authentication: do not enter sensitive data or expose the API
 publicly. Add authenticated operator access, rate limits and a retention policy first.
 Restart the backend after updating so schema initialization creates the new table.
+
+## Itinerary photos and sample reviews
+
+Each suggested stop now shows a photo preview and an expandable fictional review.
+`frontend/src/PlacePreview.tsx` maps the eleven sample activity IDs to media and review
+examples. These are explicitly labelled demo reviews, not actual visitor feedback.
+New catalogue IDs show an empty state until media is added.
+
+`frontend/src/placePhotos.json` records Wikimedia Commons source URLs, photographers,
+and per-photo licence links (CC BY-SA 3.0/4.0 or CC0 1.0). Photos are externally hosted and need internet access;
+a fallback message is shown if a photo fails to load. The preview visually crops photos;
+the original framing is available through the photo link. Regional/cuisine images used
+for fictional venues are labelled illustrative rather than photos of the exact venue.
+Photos and reviews follow the displayed itinerary, including recovery previews.
+
+## Expanded destinations
+
+The catalogue includes Devghat heritage walk, Maula Kalika Temple hike in neighbouring
+Gaindakot, Meghauli nature outing, and Sauraha riverfront stroll in Ratnanagar.
+These are real destination areas with sample activity costs, time windows and durations.
+Coordinates are approximate area anchors, not verified trailheads or access points.
+Existing trip snapshots stay unchanged; generate a new plan to consider new places.
+Restart the backend to load the expanded catalogue.
+
+Destination references: https://ntb.gov.np/en/devghat, https://www.maulakalika.org.np/,
+https://ntb.gov.np/meghauli and https://ntb.gov.np/sauraha.

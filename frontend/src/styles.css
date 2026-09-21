@@ -2212,3 +2212,138 @@ fieldset {
     font-size: 12px;
   }
 }
+
+/* Photos belong to the stops in the current itinerary, including replacements. */
+.place-preview {
+  margin: 0 0 22px 36px;
+  border: 1px solid #dfe7de;
+  border-radius: 14px;
+  overflow: hidden;
+  background: white;
+}
+.place-photo {
+  margin: 0;
+}
+.place-photo > a {
+  display: block;
+  position: relative;
+}
+.place-photo img {
+  display: block;
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  background: #edf2eb;
+}
+.place-photo-label {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: #173b30e8;
+  color: white;
+  font-size: 11px;
+}
+.place-photo figcaption {
+  padding: 12px 14px;
+  line-height: 1.5;
+  font-size: 11px;
+  color: #52695b;
+}
+.place-photo figcaption > span,
+.place-photo figcaption small {
+  display: block;
+}
+.place-photo figcaption small {
+  margin-top: 5px;
+  font-size: 10px;
+  color: #6a796e;
+}
+.place-photo figcaption a {
+  color: inherit;
+  text-underline-offset: 2px;
+}
+.place-photo-fallback {
+  min-height: 160px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #edf2eb;
+  color: #637a6d;
+  font-size: 12px;
+}
+.place-reviews {
+  border-top: 1px solid #e5ece2;
+}
+.place-reviews summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px;
+  font-size: 12px;
+}
+.place-reviews summary::-webkit-details-marker {
+  display: none;
+}
+.place-reviews summary > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.place-sample-score {
+  color: #617766;
+  font-size: 11px;
+}
+.place-review-body {
+  padding: 0 14px 16px;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.place-review-body .place-review-notice {
+  background: #f5f3e9;
+  color: #756849;
+  padding: 9px 12px;
+  font-size: 11px;
+  margin: 0 0 14px;
+  border-radius: 8px;
+}
+.place-review-author {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+.place-review-author > span {
+  display: flex;
+  color: #9a7732;
+  gap: 2px;
+}
+.place-empty {
+  padding: 12px;
+  color: #637a6d;
+  font-size: 12px;
+}
+.place-preview a:focus-visible,
+.place-preview summary:focus-visible {
+  outline: 3px solid #719474;
+  outline-offset: -3px;
+}
+@media (max-width: 600px) {
+  .place-preview {
+    margin-left: 0;
+  }
+  .place-photo img {
+    height: 170px;
+  }
+}
+.destination-source { display: inline-block; font-size: 12px; color: #35664c; margin: 4px 0 12px; text-underline-offset: 3px; }

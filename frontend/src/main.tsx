@@ -29,6 +29,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import MapView from "./MapView";
+import PlacePreview from "./PlacePreview";
 import HelpSection, { ReportInbox } from "./HelpSection";
 import {
   api,
@@ -596,6 +597,14 @@ function App() {
                       </div>
                       <h3>{chosen.activity.name}</h3>
                       <p>{chosen.activity.description}</p>
+                      <a
+                        href={chosen.activity.source}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="destination-source"
+                      >
+                        Destination information ↗
+                      </a>
                       <div className="detail-meta">
                         <span>
                           <Clock size={14} />
@@ -708,36 +717,39 @@ function App() {
                       </div>
                       <div className="timeline">
                         {displayPlan.stops.map((s, i) => (
-                          <button
-                            className={`stop ${selected === s.activity.id ? "selected" : ""} ${trip.affectedIds.includes(s.activity.id) ? "affected" : ""}`}
-                            key={s.activity.id}
-                            onClick={() => setSelected(s.activity.id)}
-                          >
-                            <div className="stop-time">
-                              {time(s.arrival)}
-                              <span>{time(s.departure)}</span>
-                            </div>
-                            <div className="stop-number">{i + 1}</div>
-                            <div className="stop-info">
-                              <span className="stop-tag">
-                                {kindName[s.activity.kind]}
-                                {s.activity.kind === trip.preferences.focus
-                                  ? " · YOUR FOCUS"
-                                  : ""}
-                              </span>
-                              <h4>{s.activity.name}</h4>
-                              <p>{s.activity.area}</p>
-                              <span className="stop-duration">
-                                {s.activity.duration} min experience · ~
-                                {s.travelMinutes} min transfer
-                              </span>
-                            </div>
-                            <div className="stop-price">
-                              NPR {money(s.activityCost)}
-                              <span>for your group</span>
-                              <ArrowUpRight size={18} />
-                            </div>
-                          </button>
+                          <React.Fragment key={s.activity.id}>
+                            <button
+                              className={`stop ${selected === s.activity.id ? "selected" : ""} ${trip.affectedIds.includes(s.activity.id) ? "affected" : ""}`}
+                              key={s.activity.id}
+                              onClick={() => setSelected(s.activity.id)}
+                            >
+                              <div className="stop-time">
+                                {time(s.arrival)}
+                                <span>{time(s.departure)}</span>
+                              </div>
+                              <div className="stop-number">{i + 1}</div>
+                              <div className="stop-info">
+                                <span className="stop-tag">
+                                  {kindName[s.activity.kind]}
+                                  {s.activity.kind === trip.preferences.focus
+                                    ? " · YOUR FOCUS"
+                                    : ""}
+                                </span>
+                                <h4>{s.activity.name}</h4>
+                                <p>{s.activity.area}</p>
+                                <span className="stop-duration">
+                                  {s.activity.duration} min experience · ~
+                                  {s.travelMinutes} min transfer
+                                </span>
+                              </div>
+                              <div className="stop-price">
+                                NPR {money(s.activityCost)}
+                                <span>for your group</span>
+                                <ArrowUpRight size={18} />
+                              </div>
+                            </button>
+                            <PlacePreview activity={s.activity} />
+                          </React.Fragment>
                         ))}
                         <div className="return-stop">
                           <span>{time(displayPlan.returnMinute)}</span>

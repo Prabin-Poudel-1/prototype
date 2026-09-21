@@ -15,6 +15,23 @@ class PlannerTest {
   }
 
   @Test
+  void expandedDestinationsAreReachableAndRespectWalkingPreference() {
+    for (String id : List.of("devghat", "maulakalika", "meghauli", "sauraha-riverfront")) {
+      Activity activity = catalog.get(id);
+      Preferences p =
+          new Preferences("2026-10-10", 2, 20000, 10, activity.kind(), "optional", false);
+      Plan result = planner.plan(p, List.of(activity), Set.of()).orElseThrow();
+      assertEquals(id, result.stops().getFirst().activity().id());
+      assertTrue(result.totalCost() <= p.budget());
+      assertTrue(result.totalMinutes() <= p.hours() * 60);
+      Preferences light =
+          new Preferences(
+              p.date(), p.people(), p.budget(), p.hours(), p.focus(), p.culture(), true);
+      assertTrue(planner.plan(light, List.of(activity), Set.of()).isEmpty());
+    }
+  }
+
+  @Test
   void plansRespectConstraintsAcrossBudgetsGroupsAndTimeLimits() {
     int feasible = 0;
     for (int group = 1; group <= 8; group++)

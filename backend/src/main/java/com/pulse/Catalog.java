@@ -112,7 +112,71 @@ public class Catalog {
               1020,
               false,
               "A sample longer excursion for visitors with additional time and transport budget.",
-              "https://ntb.gov.np/bharatpur"));
+              "https://ntb.gov.np/bharatpur"),
+          new Activity(
+              "devghat",
+              "Devghat heritage walk",
+              "Devghat pilgrimage area · approximate",
+              "culture",
+              27.7474,
+              84.4262,
+              90,
+              250,
+              420,
+              1020,
+              false,
+              "Explore the Devghat pilgrimage area near the river confluence. This sample walking"
+                  + " visit uses demonstration pricing and hours; confirm access locally and"
+                  + " respect religious activities.",
+              "https://ntb.gov.np/en/devghat"),
+          new Activity(
+              "maulakalika",
+              "Maula Kalika Temple hike",
+              "Gaindakot · near Bharatpur · approximate",
+              "culture",
+              27.7276,
+              84.4086,
+              180,
+              300,
+              420,
+              1020,
+              false,
+              "A sample hill walk to Maula Kalika Temple in neighbouring Gaindakot. Walking time"
+                  + " and cost are estimates; this plan does not include a cable-car ticket."
+                  + " Confirm the route and access before visiting.",
+              "https://www.maulakalika.org.np/"),
+          new Activity(
+              "meghauli",
+              "Meghauli nature outing",
+              "Meghauli, western Chitwan · approximate area",
+              "nature",
+              27.5770,
+              84.2280,
+              150,
+              1200,
+              480,
+              1020,
+              false,
+              "A sample guided nature outing around Meghauli. The destination is real, but this is"
+                  + " not a booked safari. Arrange an authorised guide and confirm any permits and"
+                  + " entry fees separately; wildlife sightings are not guaranteed.",
+              "https://ntb.gov.np/meghauli"),
+          new Activity(
+              "sauraha-riverfront",
+              "Sauraha riverfront stroll",
+              "Sauraha, Ratnanagar · approximate riverfront",
+              "nature",
+              27.5756,
+              84.4931,
+              75,
+              250,
+              480,
+              1020,
+              false,
+              "A sample stroll by the Rapti River at Sauraha, a neighbouring Chitwan destination."
+                  + " Stay in designated visitor areas and follow local wildlife guidance. Prices"
+                  + " and opening windows are demonstration assumptions, not verified fees.",
+              "https://ntb.gov.np/sauraha"));
 
   public List<Activity> all() {
     return activities;
