@@ -1,5 +1,13 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { api } from "./types";
+import {
+  Phone,
+  ShieldCheck,
+  Hospital,
+  MapPin,
+  ArrowUpRight,
+  MessageSquare,
+} from "lucide-react";
 
 type Report = {
   id: string;
@@ -51,56 +59,73 @@ export default function HelpSection() {
       <div className="eyebrow">HELP & CONTACTS</div>
       <h1>Help when you need it.</h1>
       <p className="page-intro">
-        Call a service directly, find nearby help, or tell us about a problem.
+        A direct contact. A nearby service. A place to raise a concern.
       </p>
       <div className="help-urgent">
-        <strong>Need urgent help?</strong> Call directly. The report form below
-        is not monitored by emergency services and cannot request rescue.
+        <Phone size={18} aria-hidden="true" />
+        <span>
+          <strong>For urgent help, call directly.</strong> Reports in Pulse do
+          not request emergency assistance.
+        </span>
+      </div>
+      <div className="help-section-heading">
+        <h2>Call for help</h2>
+        <span>Contacts in Nepal</span>
       </div>
       <div className="help-grid">
-        <article className="help-card">
+        <article className="help-card help-contact">
+          <span className="help-icon">
+            <ShieldCheck size={24} aria-hidden="true" />
+          </span>
           <h2>Nepal Police</h2>
           <p>Police emergency control in Nepal.</p>
           <a className="help-call" href="tel:100">
-            Call 100
+            <Phone size={18} aria-hidden="true" /> Call 100
           </a>
           <a
             href="https://www.nepalpolice.gov.np/stations/emergency-contacts/"
             target="_blank"
             rel="noreferrer"
           >
-            Official contact source ↗
+            Official website ↗
           </a>
         </article>
-        <article className="help-card">
+        <article className="help-card help-contact">
+          <span className="help-icon">
+            <Hospital size={24} aria-hidden="true" />
+          </span>
           <h2>Bharatpur Hospital</h2>
-          <p>
-            General hospital contact. Ask about the care you need; this is not a
-            confirmed ambulance dispatch line.
-          </p>
+          <p>General enquiries · not an ambulance dispatch line.</p>
           <a className="help-call" href="tel:+97756597003">
-            Call +977 56-597003
+            <Phone size={18} aria-hidden="true" /> +977 56-597003
           </a>
           <a
             href="https://online.bharatpurhospital.gov.np/"
             target="_blank"
             rel="noreferrer"
           >
-            Official contact source ↗
+            Official website ↗
           </a>
         </article>
       </div>
-      <p className="help-small">
-        Contacts checked against official websites on 20 September 2026. Call
-        links open your device’s calling app; desktop computers may need a
-        calling application. The short code 100 is for use in Nepal.
-      </p>
-      <article className="help-card">
-        <h2>Find nearby services</h2>
+      <details className="help-contact-notes">
+        <summary>About these contact numbers</summary>
         <p>
-          Open Google Maps to see nearby listings, directions and their listed
-          phone numbers. Maps may ask for your location. Pulse does not
-          determine which service is closest or available.
+          Checked against official websites on 20 September 2026. The short code
+          100 works within Nepal. Calling requires a phone or a supported
+          calling app.
+        </p>
+      </details>
+      <article className="help-card help-nearby">
+        <div className="help-section-heading">
+          <h2>
+            <MapPin size={20} aria-hidden="true" /> Find nearby services
+          </h2>
+          <span>Google Maps</span>
+        </div>
+        <p>
+          Explore listings, directions and phone numbers. Maps may ask for your
+          location; availability is not verified by Pulse.
         </p>
         <div className="help-actions">
           <a
@@ -109,7 +134,8 @@ export default function HelpSection() {
             target="_blank"
             rel="noreferrer"
           >
-            Find nearby hospitals ↗
+            <Hospital size={20} aria-hidden="true" /> Hospitals nearby{" "}
+            <ArrowUpRight size={18} aria-hidden="true" />
           </a>
           <a
             className="help-link"
@@ -117,10 +143,11 @@ export default function HelpSection() {
             target="_blank"
             rel="noreferrer"
           >
-            Find nearby police ↗
+            <ShieldCheck size={20} aria-hidden="true" /> Police nearby{" "}
+            <ArrowUpRight size={18} aria-hidden="true" />
           </a>
           <a
-            className="help-link"
+            className="help-browse"
             href="https://www.google.com/maps/search/?api=1&query=hospitals+in+Bharatpur+Chitwan+Nepal"
             target="_blank"
             rel="noreferrer"
@@ -129,59 +156,73 @@ export default function HelpSection() {
           </a>
         </div>
       </article>
-      <form className="help-card help-form" onSubmit={submit}>
-        <h2>Report a non-emergency problem</h2>
-        <p>
-          Reports are saved in this prototype’s database and can be read in
-          Operator demo. No police, hospital or municipal authority receives
-          them. Avoid private medical details, passwords or identity documents.
-        </p>
-        <label htmlFor="report-category">Problem type</label>
-        <select
-          id="report-category"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          {Object.entries(categories).map(([key, label]) => (
-            <option key={key} value={key}>
-              {label}
-            </option>
-          ))}
-        </select>
-        <label htmlFor="report-location">Place or landmark (optional)</label>
-        <input
-          id="report-location"
-          maxLength={200}
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          placeholder="For example: Narayani riverfront"
-        />
-        <label htmlFor="report-description">What happened?</label>
-        <textarea
-          id="report-description"
-          required
-          minLength={10}
-          maxLength={2000}
-          rows={5}
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Describe the problem and what needs attention."
-        />
-        <small>{description.length}/2000 characters · minimum 10</small>
-        {error && <p role="alert">{error}</p>}
-        {receipt && (
-          <p className="help-receipt" role="status">
-            Saved to the local demo inbox. Reference: {receipt}. This does not
-            dispatch help.
+      <details className="help-card help-report-panel">
+        <summary>
+          <span className="help-icon">
+            <MessageSquare size={22} aria-hidden="true" />
+          </span>
+          <span>
+            <strong>Report a problem</strong>
+            <small>For non-emergency concerns about your visit</small>
+          </span>
+          <span className="help-expand" aria-hidden="true">
+            +
+          </span>
+        </summary>
+        <form className="help-form" onSubmit={submit}>
+          <h2>Tell us what happened</h2>
+          <p>
+            Saved to the local demo inbox, visible in Operator demo. Not sent to
+            emergency services or authorities. Please leave out sensitive
+            personal details.
           </p>
-        )}
-        <button
-          className="primary"
-          disabled={busy || description.trim().length < 10}
-        >
-          {busy ? "Saving…" : "Save report to demo inbox"}
-        </button>
-      </form>
+          <label htmlFor="report-category">Problem type</label>
+          <select
+            id="report-category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            {Object.entries(categories).map(([key, label]) => (
+              <option key={key} value={key}>
+                {label}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="report-location">Place or landmark (optional)</label>
+          <input
+            id="report-location"
+            maxLength={200}
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            placeholder="For example: Narayani riverfront"
+          />
+          <label htmlFor="report-description">What happened?</label>
+          <textarea
+            id="report-description"
+            required
+            minLength={10}
+            maxLength={2000}
+            rows={5}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Describe the problem and what needs attention."
+          />
+          <small>{description.length}/2000 characters · minimum 10</small>
+          {error && <p role="alert">{error}</p>}
+          {receipt && (
+            <p className="help-receipt" role="status">
+              Saved to the local demo inbox. Reference: {receipt}. This does not
+              dispatch help.
+            </p>
+          )}
+          <button
+            className="primary"
+            disabled={busy || description.trim().length < 10}
+          >
+            {busy ? "Saving…" : "Save report to demo inbox"}
+          </button>
+        </form>
+      </details>
     </section>
   );
 }

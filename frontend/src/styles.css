@@ -1974,3 +1974,241 @@ fieldset {
     padding: 18px;
   }
 }
+
+/* Calm, progressively disclosed help workspace. */
+.help-page {
+  max-width: 1040px;
+  margin-inline: auto;
+}
+.help-page .page-intro {
+  max-width: 650px;
+  margin-bottom: 28px;
+}
+.help-page .help-urgent {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  padding: 18px 22px;
+  background: #fbf3e9;
+  margin-bottom: 34px;
+}
+.help-page .help-urgent svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.help-page .help-urgent strong {
+  display: inline;
+  margin-right: 5px;
+}
+.help-section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.help-section-heading h2 {
+  font-size: 20px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.help-section-heading > span {
+  color: #65756d;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.help-page .help-grid {
+  gap: 20px;
+  margin-top: 16px;
+}
+.help-page .help-contact {
+  margin: 0;
+  padding: 26px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.help-icon {
+  width: 46px;
+  height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #edf4ee;
+  color: #24624c;
+  border-radius: 14px;
+  flex-shrink: 0;
+}
+.help-contact .help-icon {
+  margin-bottom: 20px;
+}
+.help-page .help-contact h2 {
+  font-size: 21px;
+  margin-bottom: 8px;
+}
+.help-page .help-contact p {
+  color: #65756d;
+  font-size: 14px;
+  margin: 0 0 24px;
+  flex: 1;
+}
+.help-page .help-call {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 18px;
+  background: #1c4f3e;
+  color: white;
+  padding: 14px 18px;
+  border-radius: 10px;
+  width: 100%;
+  margin: 0 0 16px;
+  text-decoration: none;
+}
+.help-contact > a:last-child {
+  font-size: 12px;
+  color: #64766b;
+  align-self: center;
+  text-underline-offset: 3px;
+}
+.help-contact-notes {
+  color: #68776d;
+  font-size: 12px;
+  margin: 16px 0 32px;
+  line-height: 1.65;
+}
+.help-contact-notes summary {
+  cursor: pointer;
+  width: fit-content;
+}
+.help-contact-notes p {
+  max-width: 680px;
+}
+.help-page .help-nearby {
+  padding: 26px;
+  margin: 0 0 24px;
+}
+.help-nearby > p {
+  color: #65756d;
+  font-size: 14px;
+  max-width: 650px;
+  margin: 14px 0 22px;
+}
+.help-page .help-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.help-page .help-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border-color: #dce5df;
+  padding: 18px;
+}
+.help-link svg:last-child {
+  margin-left: auto;
+}
+.help-browse {
+  grid-column: 1 / -1;
+  font-size: 12px;
+  margin-top: 4px;
+  width: fit-content;
+  text-underline-offset: 3px;
+}
+.help-page .help-report-panel {
+  padding: 0;
+  overflow: hidden;
+}
+.help-report-panel > summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  list-style: none;
+  padding: 24px 26px;
+}
+.help-report-panel > summary::-webkit-details-marker {
+  display: none;
+}
+.help-report-panel summary strong {
+  display: block;
+  font-size: 18px;
+}
+.help-report-panel summary small {
+  display: block;
+  font-size: 13px;
+  color: #65756d;
+  margin-top: 6px;
+  line-height: 1.5;
+}
+.help-expand {
+  font-size: 26px;
+  margin-left: auto;
+  color: #416653;
+}
+.help-report-panel[open] .help-expand {
+  transform: rotate(45deg);
+}
+.help-report-panel .help-form {
+  border-top: 1px solid #e5ebe6;
+  padding: 26px;
+  gap: 14px;
+}
+.help-form > p {
+  margin: 0 0 8px;
+  color: #65756d;
+  font-size: 14px;
+}
+.help-form > label {
+  font-size: 13px;
+  margin-top: 8px;
+}
+.help-form > small {
+  color: #65756d;
+}
+.help-page a:focus-visible,
+.help-page summary:focus-visible {
+  outline: 3px solid #8eb59a;
+  outline-offset: 4px;
+}
+.help-page .help-call:hover {
+  background: #28644f;
+}
+.help-page .help-link:hover {
+  background: #f3f7f2;
+}
+@media (max-width: 700px) {
+  .help-page .help-grid,
+  .help-page .help-actions {
+    grid-template-columns: 1fr;
+  }
+  .help-page .help-grid {
+    gap: 14px;
+  }
+  .help-page .help-contact,
+  .help-page .help-nearby,
+  .help-report-panel .help-form {
+    padding: 22px;
+  }
+  .help-report-panel > summary {
+    padding: 20px;
+    gap: 12px;
+  }
+  .help-section-heading {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .help-report-panel summary strong {
+    font-size: 16px;
+  }
+  .help-report-panel summary small {
+    font-size: 12px;
+  }
+}
