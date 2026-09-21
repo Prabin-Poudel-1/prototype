@@ -29,6 +29,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import MapView from "./MapView";
+import AskPulse from "./AskPulse";
 import PlacePreview from "./PlacePreview";
 import HelpSection, { ReportInbox } from "./HelpSection";
 import {
@@ -1062,15 +1063,16 @@ function App() {
           </li>
         </ol>
         <p className="modal-note">
-          This first version uses deterministic planning, not an AI API. No live
-          weather, actual booking, photo recognition or emergency dispatch is
-          connected.
+          The planner checks constraints deterministically. Ask Pulse uses
+          Gemini when configured. No live weather, actual booking, photo
+          recognition or emergency dispatch is connected.
         </p>
         <button className="primary" onClick={() => setShowInfo(false)}>
           Let’s explore
           <ArrowRight size={17} />
         </button>
       </dialog>
+      <AskPulse trip={trip} />
     </div>
   );
 }

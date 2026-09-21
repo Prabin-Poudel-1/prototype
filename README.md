@@ -17,7 +17,8 @@ A working first prototype for interest-led day planning in Bharatpur, with a map
 - Replacement preview and explicit acceptance, protected against stale revisions and changed availability.
 - Optional foreground device location, with permission. Coordinates are not sent to the backend.
 - Downloadable text itinerary.
-- Sixteen backend tests, including a 160-combination constraint sweep.
+- Ask Pulse chat panel with trip-aware Gemini answers, suggested questions and clear setup/error states.
+- Nineteen backend tests, including a 160-combination constraint sweep.
 
 ## Important data boundaries
 
@@ -27,7 +28,7 @@ Travel estimates use straight-line distance × 1.4, an assumed 18 km/h, a minimu
 
 The selected date is stored with the trip but does not yet change seasonal suitability or opening hours. The planner currently supports **one to five local days with a chosen starting time**, up to three activities per day and return to a fixed Bharatpur base each evening. Flights and accommodation are excluded.
 
-There is no connected AI, live weather, live traffic, wildlife observation feed, actual reservation, payment, photo-recognition service or emergency dispatch. No booking is created by accepting a plan. A PWA manifest and offline service worker have not yet been implemented.
+Ask Pulse connects to Gemini when a backend API key is configured; see [setup instructions](docs/ASK-PULSE.md). It provides advice and does not change saved plans. There is no live weather, live traffic, wildlife observation feed, actual reservation, payment, photo-recognition service or emergency dispatch. No booking is created by accepting a plan. A PWA manifest and offline service worker have not yet been implemented.
 
 ## Requirements
 

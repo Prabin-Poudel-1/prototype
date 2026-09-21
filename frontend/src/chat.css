@@ -1,0 +1,328 @@
+.pulse-chat-launch {
+  position: fixed;
+  right: 24px;
+  bottom: 22px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 18px;
+  border: 1px solid #366753;
+  border-radius: 18px;
+  background: #244d40;
+  color: #fff;
+  box-shadow: 0 8px 28px #153d4030;
+  text-align: left;
+}
+.pulse-chat-launch span {
+  font-weight: 700;
+  font-size: 14px;
+}
+.pulse-chat-launch small {
+  display: block;
+  font-weight: 400;
+  font-size: 10px;
+  color: #d7e8da;
+  margin-top: 3px;
+}
+.pulse-chat {
+  position: fixed;
+  inset: auto 24px 22px auto;
+  margin: 0;
+  padding: 0;
+  width: 420px;
+  max-width: calc(100vw - 32px);
+  height: min(730px, calc(100dvh - 44px));
+  max-height: calc(100dvh - 44px);
+  border: 1px solid #d8e3da;
+  border-radius: 24px;
+  background: #fbfcf9;
+  color: #243d34;
+  box-shadow: 0 24px 90px #17392e35;
+  overflow: hidden;
+}
+.pulse-chat[open] {
+  display: flex;
+  flex-direction: column;
+}
+.pulse-chat::backdrop {
+  background: #142d2633;
+  backdrop-filter: blur(2px);
+}
+.pulse-chat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 22px 20px;
+  background: #244d40;
+  color: #fff;
+  flex-shrink: 0;
+}
+.pulse-chat-symbol {
+  display: grid;
+  place-items: center;
+  height: 43px;
+  width: 43px;
+  background: #d8edb3;
+  color: #244d40;
+  border-radius: 14px;
+  flex-shrink: 0;
+}
+.pulse-chat-header h2 {
+  margin: 0;
+  font-size: 19px;
+  letter-spacing: -0.5px;
+}
+.pulse-chat-header p {
+  margin: 4px 0 0;
+  font-size: 11px;
+  color: #d2e0d5;
+}
+.pulse-chat-header > div {
+  flex: 1;
+}
+.pulse-chat-header button {
+  display: grid;
+  place-items: center;
+  padding: 7px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #eef5e8;
+}
+.pulse-chat-header button:hover {
+  background: #ffffff20;
+}
+.pulse-chat-context {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 20px;
+  font-size: 11px;
+  background: #eff4e9;
+  border-bottom: 1px solid #e0e8d8;
+  flex-shrink: 0;
+}
+.pulse-chat-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 24px 20px;
+}
+.pulse-chat-eyebrow {
+  color: #678064;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+.pulse-chat-welcome h3 {
+  font-family: Manrope, sans-serif;
+  font-size: 29px;
+  line-height: 1.2;
+  letter-spacing: -1.1px;
+  margin: 14px 0;
+}
+.pulse-chat-welcome > p {
+  font-size: 13px;
+  color: #69796d;
+  line-height: 1.65;
+}
+.pulse-chat-prompts {
+  display: grid;
+  gap: 8px;
+  margin: 23px 0 15px;
+}
+.pulse-chat-prompts button {
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: white;
+  border: 1px solid #dce5d6;
+  border-radius: 12px;
+  padding: 13px 14px;
+  font-size: 12px;
+  color: #35543f;
+}
+.pulse-chat-prompts button:hover:not(:disabled) {
+  background: #edf4e5;
+  border-color: #a0b393;
+}
+.pulse-chat-prompts button:disabled {
+  opacity: 0.65;
+}
+.pulse-chat-welcome .pulse-chat-languages {
+  font-size: 11px;
+}
+.pulse-chat-message {
+  margin-bottom: 18px;
+  max-width: 94%;
+}
+.pulse-chat-message > span {
+  display: block;
+  font-size: 10px;
+  color: #6c7d70;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.pulse-chat-message p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  line-height: 1.7;
+  padding: 14px 16px;
+  border-radius: 3px 15px 15px 15px;
+  background: white;
+  border: 1px solid #e0e7da;
+  margin: 0;
+}
+.pulse-chat-message.user {
+  margin-left: auto;
+}
+.pulse-chat-message.user > span {
+  text-align: right;
+}
+.pulse-chat-message.user p {
+  border-radius: 15px 3px 15px 15px;
+  background: #eaf2de;
+  border-color: #dce8ce;
+}
+.pulse-chat-thinking {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  color: #60785e;
+}
+.pulse-chat-spin {
+  animation: pulse-chat-spin 1.4s linear infinite;
+}
+@keyframes pulse-chat-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.pulse-chat-setup,
+.pulse-chat-error {
+  padding: 14px;
+  border-radius: 12px;
+  background: #f1f4e9;
+  border: 1px solid #dbe3ce;
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 18px;
+}
+.pulse-chat-setup p,
+.pulse-chat-error p {
+  margin: 6px 0;
+}
+.pulse-chat-setup summary {
+  cursor: pointer;
+  font-size: 11px;
+  margin-top: 8px;
+}
+.pulse-chat-error {
+  background: #fff5ee;
+  border-color: #efd4bf;
+  color: #875232;
+}
+.pulse-chat-error button {
+  border: 0;
+  background: transparent;
+  padding: 4px 0;
+  text-decoration: underline;
+  color: inherit;
+}
+.pulse-chat-footer {
+  padding: 14px 20px 18px;
+  background: white;
+  border-top: 1px solid #e1e7dd;
+  flex-shrink: 0;
+}
+.pulse-chat-footer > p {
+  font-size: 10px;
+  line-height: 1.5;
+  margin: 0 0 10px;
+  color: #637460;
+}
+.pulse-chat-footer form {
+  display: flex;
+  align-items: center;
+  padding: 7px;
+  border: 1px solid #cad7c1;
+  border-radius: 14px;
+  background: #fbfcf9;
+  gap: 6px;
+}
+.pulse-chat-footer form:focus-within {
+  border-color: #456f51;
+  box-shadow: 0 0 0 2px #456f5115;
+}
+.pulse-chat-footer textarea {
+  flex: 1;
+  min-width: 0;
+  resize: none;
+  padding: 8px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #294335;
+}
+.pulse-chat-footer form button {
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: #285543;
+  color: white;
+  border-radius: 10px;
+  padding: 11px;
+}
+.pulse-chat-footer form button:disabled {
+  opacity: 0.4;
+}
+.pulse-chat-footer > small {
+  display: block;
+  font-size: 9px;
+  line-height: 1.5;
+  color: #7d887b;
+  margin-top: 9px;
+}
+.pulse-chat-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+@media (max-width: 600px) {
+  .pulse-chat {
+    inset: auto 8px 8px;
+    width: calc(100vw - 16px);
+    max-width: none;
+    height: calc(100dvh - 16px);
+    max-height: calc(100dvh - 16px);
+    border-radius: 20px;
+  }
+  .pulse-chat-launch {
+    right: 14px;
+    bottom: 14px;
+    padding: 12px 15px;
+  }
+  .pulse-chat-header {
+    padding: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pulse-chat-spin {
+    animation: none;
+  }
+}
+
+.pulse-chat-body > .pulse-chat-setup:first-child {
+  margin: 0 0 22px;
+}
