@@ -22,6 +22,36 @@ class TripServiceTest {
   }
 
   @Test
+  void multiDayTripSurvivesSavingAndRecovery() {
+    Trip trip =
+        service.create(
+            new Preferences("2026-10-10", 2, 18000, 6, "bird", "include", false, 3, "09:00"));
+    assertEquals(3, service.get(trip.id()).plan().days().size());
+    service.status(trip.plan().stops().getFirst().activity().id(), false);
+    Recovery recovery = service.recovery(trip.id());
+    assertEquals(3, recovery.plan().days().size());
+    Trip accepted = service.accept(trip.id(), recovery.basedOnRevision(), recovery.planToken());
+    assertEquals("09:00", accepted.preferences().startTime());
+    assertTrue(accepted.affectedIds().isEmpty());
+  }
+
+  @Test
+  void legacyPreferencesAndPlansStillLoad() {
+    var json = new tools.jackson.databind.ObjectMapper();
+    Preferences p =
+        json.readValue(
+            "{\"date\":\"2026-10-10\",\"people\":2,\"budget\":6500,\"hours\":6,\"focus\":\"bird\",\"culture\":\"optional\",\"lowWalking\":false}",
+            Preferences.class);
+    assertEquals(1, p.days());
+    assertEquals("08:00", p.startTime());
+    Plan plan =
+        json.readValue(
+            "{\"stops\":[],\"totalCost\":0,\"activityCost\":0,\"transportCost\":0,\"totalMinutes\":0,\"returnMinute\":480,\"score\":0,\"assumptions\":[]}",
+            Plan.class);
+    assertTrue(plan.days().isEmpty());
+  }
+
+  @Test
   void cancellationIsDetectedAndRecoveryRequiresExplicitAcceptance() {
     Trip t = service.create(new Preferences("2026-10-10", 2, 6500, 6, "bird", "optional", false));
     String closed = t.plan().stops().getFirst().activity().id();

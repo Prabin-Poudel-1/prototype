@@ -55,6 +55,8 @@ function App() {
     people: 2,
     budget: 6500,
     hours: 6,
+    days: 1,
+    startTime: "08:00",
     focus: "bird",
     culture: "optional",
     lowWalking: false,
@@ -65,6 +67,7 @@ function App() {
     [connected, setConnected] = useState(false),
     [showInfo, setShowInfo] = useState(false),
     [mobilePanel, setMobilePanel] = useState<"plan" | "map">("plan");
+  const [activeDay, setActiveDay] = useState(0);
   const modalRef = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     if (showInfo) modalRef.current?.showModal();
@@ -90,7 +93,12 @@ function App() {
           try {
             const t = await api<Trip>("/trips/" + id);
             if (live) {
-              if (!tripRef.current) setPreferences(t.preferences);
+              if (!tripRef.current)
+                setPreferences({
+                  ...t.preferences,
+                  days: t.preferences.days ?? 1,
+                  startTime: t.preferences.startTime ?? "08:00",
+                });
               setTrip((prev) =>
                 JSON.stringify(prev) === JSON.stringify(t) ? prev : t,
               );
@@ -120,11 +128,21 @@ function App() {
         method: "POST",
         body: JSON.stringify(preferences),
       });
+      if (
+        !t.plan.days?.length ||
+        t.preferences.days !== preferences.days ||
+        t.preferences.startTime !== preferences.startTime
+      ) {
+        throw new Error(
+          "Restart PulseApplication in IntelliJ to enable the updated multi-day planner, then try again.",
+        );
+      }
       setTrip(t);
+      setActiveDay(0);
       localStorage.setItem("pulse-trip-id", t.id);
       setSelected(null);
       setNotice(
-        "Your day is ready. Prices and availability are demonstration data.",
+        "Your trip is ready. Prices and availability are demonstration data.",
       );
     } catch (e) {
       setError((e as Error).message);
@@ -195,14 +213,20 @@ function App() {
   function save() {
     if (!trip) return;
     const body = [
-      "BHARATPUR PULSE — SAMPLE DAY PLAN",
+      "BHARATPUR PULSE — SAMPLE TRIP PLAN",
       trip.preferences.date,
       `${trip.preferences.people} travellers · NPR ${money(trip.plan.totalCost)} estimated`,
-      ...trip.plan.stops.map(
-        (s) =>
-          `${time(s.arrival)}–${time(s.departure)} ${s.activity.name} | ${s.activity.area} | NPR ${money(s.activityCost)} for group`,
-      ),
-      `Return to sample base: ${time(trip.plan.returnMinute)}`,
+      ...(trip.plan.days?.length
+        ? trip.plan.days
+        : [{ day: 1, date: trip.preferences.date, plan: trip.plan }]
+      ).flatMap((day) => [
+        `Day ${day.day} — ${day.date} — starts ${trip.preferences.startTime ?? "08:00"}`,
+        ...day.plan.stops.map(
+          (s) =>
+            `${time(s.arrival)}–${time(s.departure)} ${s.activity.name} | ${s.activity.area} | NPR ${money(s.activityCost)} for group`,
+        ),
+        `Return to sample base: ${time(day.plan.returnMinute)} | Day total NPR ${money(day.plan.totalCost)}`,
+      ]),
       "",
       ...trip.plan.assumptions,
     ].join("\n");
@@ -214,6 +238,15 @@ function App() {
     URL.revokeObjectURL(url);
   }
   const displayPlan = recovery?.plan || trip?.plan;
+  const tripDays =
+    displayPlan && trip
+      ? displayPlan.days?.length
+        ? displayPlan.days
+        : [{ day: 1, date: trip.preferences.date, plan: displayPlan }]
+      : [];
+  const currentDay =
+    tripDays[Math.min(activeDay, Math.max(0, tripDays.length - 1))];
+  const dayPlan = currentDay?.plan;
   const chosen = activities.find((a) => a.activity.id === selected);
   const dirty =
     trip && JSON.stringify(preferences) !== JSON.stringify(trip.preferences);
@@ -336,7 +369,7 @@ function App() {
                   <span className="small-line" /> EXPLORE WITH INTENTION
                 </div>
                 <h1>
-                  A day that feels like <em>you.</em>
+                  A trip that feels like <em>you.</em>
                 </h1>
                 <p>
                   Your interests. Your pace. A little room for the unexpected.
@@ -364,8 +397,8 @@ function App() {
                     <SlidersHorizontal size={18} />
                   </span>
                   <div>
-                    <h2>Make it your day</h2>
-                    <p>A local day trip, starting at 08:00</p>
+                    <h2>Make it your trip</h2>
+                    <p>Choose your dates and daily pace</p>
                   </div>
                 </div>
                 <form onSubmit={create}>
@@ -382,6 +415,52 @@ function App() {
                       }
                     />
                   </div>
+                  <div className="field-row">
+                    <div>
+                      <label htmlFor="days">Number of days</label>
+                      <div className="input-icon">
+                        <CalendarDays size={17} />
+                        <select
+                          id="days"
+                          value={preferences.days}
+                          onChange={(e) =>
+                            setPreferences({
+                              ...preferences,
+                              days: +e.target.value,
+                            })
+                          }
+                        >
+                          {[1, 2, 3, 4, 5].map((n) => (
+                            <option key={n} value={n}>
+                              {n} {n === 1 ? "day" : "days"}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                      <label htmlFor="start-time">Starting time</label>
+                      <div className="input-icon">
+                        <Clock size={17} />
+                        <input
+                          id="start-time"
+                          type="time"
+                          required
+                          value={preferences.startTime}
+                          onChange={(e) =>
+                            setPreferences({
+                              ...preferences,
+                              startTime: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <p className="trip-field-note">
+                    Starting time and available hours apply to each day. Return
+                    to the same Bharatpur base each evening.
+                  </p>
                   <div className="field-row">
                     <div>
                       <label htmlFor="people">Travellers</label>
@@ -430,7 +509,7 @@ function App() {
                   </div>
                   <div className="budget-label">
                     <label htmlFor="budget">
-                      Day budget <span>whole group</span>
+                      Trip budget <span>all days · whole group</span>
                     </label>
                     <strong>NPR {money(preferences.budget)}</strong>
                   </div>
@@ -529,7 +608,7 @@ function App() {
                     ) : (
                       <Route size={18} />
                     )}{" "}
-                    {trip ? "Build a new plan" : "Plan my day"}
+                    {trip ? "Build a new plan" : "Plan my trip"}
                     <ArrowRight size={18} />
                   </button>
                   <div className="form-footnote">
@@ -544,13 +623,13 @@ function App() {
                       {recovery
                         ? "A new way forward"
                         : trip
-                          ? "Your day, mapped out"
+                          ? "Your trip, mapped out"
                           : "Find your kind of Chitwan"}
                     </h2>
                     <p>
                       {trip
-                        ? `${trip.preferences.date} · ${trip.preferences.people} travellers · ${kindName[trip.preferences.focus]} first`
-                        : "Explore the sample experiences, then build your day."}
+                        ? `${trip.preferences.date} · ${trip.preferences.days ?? 1} day(s) · ${trip.preferences.people} travellers · ${kindName[trip.preferences.focus]} first`
+                        : "Explore the sample experiences, then build your trip."}
                     </p>
                   </div>
                   <span className="outline-badge">
@@ -558,9 +637,27 @@ function App() {
                       ? "PREVIEW"
                       : trip
                         ? `${trip.plan.stops.length} STOPS`
-                        : "7 EXPERIENCES"}
+                        : `${activities.length} EXPERIENCES`}
                   </span>
                 </div>
+                {tripDays.length > 0 && (
+                  <div className="trip-day-tabs" aria-label="Itinerary days">
+                    {tripDays.map((day, index) => (
+                      <button
+                        key={day.day}
+                        type="button"
+                        aria-pressed={currentDay?.day === day.day}
+                        onClick={() => {
+                          setActiveDay(index);
+                          setSelected(null);
+                        }}
+                      >
+                        <strong>Day {day.day}</strong>
+                        <span>{day.date}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
                 <div className="mobile-switch">
                   <button
                     className={mobilePanel === "plan" ? "active" : ""}
@@ -578,7 +675,7 @@ function App() {
                 <div className={`map-area mobile-${mobilePanel}`}>
                   <MapView
                     activities={activities}
-                    plan={displayPlan}
+                    plan={dayPlan}
                     selected={selected}
                     onSelect={select}
                   />
@@ -679,14 +776,14 @@ function App() {
                         <div>
                           <Wallet size={18} />
                           <span>
-                            Estimated total
+                            Trip total
                             <strong>NPR {money(displayPlan.totalCost)}</strong>
                           </span>
                         </div>
                         <div>
                           <Clock size={18} />
                           <span>
-                            Time planned
+                            Planned across all days
                             <strong>
                               {Math.floor(displayPlan.totalMinutes / 60)}h{" "}
                               {displayPlan.totalMinutes % 60}m
@@ -708,7 +805,7 @@ function App() {
                       </div>
                       <div className="itinerary-heading">
                         <h3>
-                          {recovery ? "Proposed itinerary" : "Your itinerary"}
+                          {`${recovery ? "Proposed itinerary" : "Your itinerary"} · Day ${currentDay?.day ?? 1}`}
                         </h3>
                         <button onClick={save} disabled={!!recovery}>
                           <Download size={15} />
@@ -716,7 +813,7 @@ function App() {
                         </button>
                       </div>
                       <div className="timeline">
-                        {displayPlan.stops.map((s, i) => (
+                        {dayPlan?.stops.map((s, i) => (
                           <React.Fragment key={s.activity.id}>
                             <button
                               className={`stop ${selected === s.activity.id ? "selected" : ""} ${trip.affectedIds.includes(s.activity.id) ? "affected" : ""}`}
@@ -752,20 +849,26 @@ function App() {
                           </React.Fragment>
                         ))}
                         <div className="return-stop">
-                          <span>{time(displayPlan.returnMinute)}</span>
+                          <span>
+                            {time(
+                              dayPlan?.returnMinute ?? displayPlan.returnMinute,
+                            )}
+                          </span>
                           <MapPin size={15} />
                           Back at the sample Bharatpur base
                         </div>
                       </div>
                       <div className="cost-footer">
                         <span>
-                          Activities{" "}
-                          <strong>NPR {money(displayPlan.activityCost)}</strong>
+                          Day activities{" "}
+                          <strong>
+                            NPR {money(dayPlan?.activityCost ?? 0)}
+                          </strong>
                         </span>
                         <span>
-                          Estimated transport{" "}
+                          Day transport{" "}
                           <strong>
-                            NPR {money(displayPlan.transportCost)}
+                            NPR {money(dayPlan?.transportCost ?? 0)}
                           </strong>
                         </span>
                       </div>
@@ -880,9 +983,9 @@ function App() {
                 <Route />
                 <h3>How the planner works</h3>
                 <p>
-                  Searches sequences of up to three activities. Checks opening
-                  windows and return time. Recovery gives preference to
-                  activities already in your plan.
+                  Plans one to five days, with up to three activities per day.
+                  Checks opening windows and return time. Recovery gives
+                  preference to activities already in your plan.
                 </p>
               </article>
               <article>

@@ -17,7 +17,7 @@ A working first prototype for interest-led day planning in Bharatpur, with a map
 - Replacement preview and explicit acceptance, protected against stale revisions and changed availability.
 - Optional foreground device location, with permission. Coordinates are not sent to the backend.
 - Downloadable text itinerary.
-- Eleven backend tests, including a 160-combination constraint sweep.
+- Sixteen backend tests, including a 160-combination constraint sweep.
 
 ## Important data boundaries
 
@@ -25,7 +25,7 @@ All experience offerings, prices, opening hours, walking labels and operator ava
 
 Travel estimates use straight-line distance × 1.4, an assumed 18 km/h, a minimum eight-minute transfer and a sample transport fare. Dashed map lines connect the stops; they are **not road directions**. Transport assumes one suitable vehicle for the group. Real fares, vehicle capacity, routes and accessibility must be checked before practical use.
 
-The selected date is stored with the trip but does not yet change seasonal suitability or opening hours. The planner currently supports **one local day starting at 08:00**, up to three activities and return to a fixed Bharatpur base. Flights and accommodation are excluded.
+The selected date is stored with the trip but does not yet change seasonal suitability or opening hours. The planner currently supports **one to five local days with a chosen starting time**, up to three activities per day and return to a fixed Bharatpur base each evening. Flights and accommodation are excluded.
 
 There is no connected AI, live weather, live traffic, wildlife observation feed, actual reservation, payment, photo-recognition service or emergency dispatch. No booking is created by accepting a plan. A PWA manifest and offline service worker have not yet been implemented.
 
@@ -184,3 +184,17 @@ Restart the backend to load the expanded catalogue.
 
 Destination references: https://ntb.gov.np/en/devghat, https://www.maulakalika.org.np/,
 https://ntb.gov.np/meghauli and https://ntb.gov.np/sauraha.
+
+## Multi-day planning
+
+The date is the first day; `days` is 1–5 and `startTime` is HH:mm (default 08:00).
+Available hours apply per day, starting at that time. A daily window must finish
+by midnight. The budget covers the whole group across all days, including each
+day's return transport. Accommodation and flights remain excluded.
+
+The planner avoids repeating activity IDs and requires at least one stop per day.
+Main interest and mandatory culture must be satisfied across the whole trip, not
+on every day. With limited sample activities or budget, a longer trip may be infeasible.
+Day selectors update the itinerary and map together. Export includes all day dates
+and return times. Old saved trips default to one day at 08:00; existing plans remain
+unchanged until rebuilt. Recovery recalculates the complete trip, not just future stops.

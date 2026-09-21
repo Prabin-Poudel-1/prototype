@@ -26,6 +26,8 @@ export type Preferences = {
   focus: string;
   culture: string;
   lowWalking: boolean;
+  days: number;
+  startTime: string;
 };
 export type Stop = {
   activity: Activity;
@@ -43,6 +45,7 @@ export type Plan = {
   returnMinute: number;
   score: number;
   assumptions: string[];
+  days?: { day: number; date: string; plan: Plan }[];
 };
 export type Trip = {
   id: string;

@@ -1,6 +1,6 @@
 # Next implementation stages
 
-The agreed product direction is a web-first tourism companion for international and domestic visitors, supporting planning before arrival and adaptation during the trip. The current deliverable is the first local, one-day slice.
+The agreed product direction is a web-first tourism companion for international and domestic visitors, supporting planning before arrival and adaptation during the trip. The current deliverable is the local prototype supporting one to five days.
 
 ## 1. Replace sample assumptions with checked data
 

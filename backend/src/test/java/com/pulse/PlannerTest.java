@@ -15,6 +15,76 @@ class PlannerTest {
   }
 
   @Test
+  void multipleDaysRespectDatesStartTimeUniqueStopsAndWholeTripBudget() {
+    Preferences p =
+        new Preferences("2026-12-31", 2, 18000, 6, "bird", "include", false, 3, "09:30");
+    Plan result = planner.plan(p, catalog.all(), Set.of()).orElseThrow();
+    assertEquals(3, result.days().size());
+    assertEquals("2027-01-02", result.days().getLast().date());
+    assertTrue(result.totalCost() <= p.budget());
+    assertEquals(
+        result.totalCost(), result.days().stream().mapToInt(d -> d.plan().totalCost()).sum());
+    assertEquals(
+        result.totalMinutes(), result.days().stream().mapToInt(d -> d.plan().totalMinutes()).sum());
+    assertEquals(
+        result.stops().size(),
+        result.stops().stream().map(s -> s.activity().id()).distinct().count());
+    assertTrue(result.stops().stream().anyMatch(s -> s.activity().kind().equals("culture")));
+    assertTrue(result.stops().stream().anyMatch(s -> s.activity().kind().equals("bird")));
+    for (DayPlan day : result.days()) {
+      assertFalse(day.plan().stops().isEmpty());
+      assertTrue(day.plan().stops().size() <= 3);
+      assertTrue(day.plan().returnMinute() <= 570 + 360);
+      assertTrue(day.plan().stops().getFirst().arrival() >= 570);
+      assertEquals(day.plan().returnMinute() - 570, day.plan().totalMinutes());
+    }
+  }
+
+  @Test
+  void lateStartsAndInvalidDayCountsAreHandled() {
+    Preferences late =
+        new Preferences("2026-10-10", 2, 6500, 2, "bird", "optional", false, 1, "20:00");
+    assertTrue(planner.plan(late, catalog.all(), Set.of()).isEmpty());
+    for (String time : List.of("25:00", "9:00", "bad", "23:30"))
+      assertThrows(
+          IllegalArgumentException.class,
+          () ->
+              planner.validate(
+                  new Preferences("2026-10-10", 2, 6500, 2, "bird", "optional", false, 1, time)));
+    for (int days : new int[] {0, 6})
+      assertThrows(
+          IllegalArgumentException.class,
+          () ->
+              planner.validate(
+                  new Preferences(
+                      "2026-10-10", 2, 6500, 6, "bird", "optional", false, days, "08:00")));
+    assertTrue(
+        planner
+            .plan(
+                new Preferences("2026-10-10", 8, 500, 6, "bird", "optional", false, 3, "08:00"),
+                catalog.all(),
+                Set.of())
+            .isEmpty());
+  }
+
+  @Test
+  void fiveDaySearchFinishesWithinPracticalTime() {
+    assertTimeout(
+        java.time.Duration.ofSeconds(10),
+        () -> {
+          Plan result =
+              planner
+                  .plan(
+                      new Preferences(
+                          "2026-10-10", 2, 20000, 8, "nature", "optional", false, 5, "08:00"),
+                      catalog.all(),
+                      Set.of())
+                  .orElseThrow();
+          assertEquals(5, result.days().size());
+        });
+  }
+
+  @Test
   void expandedDestinationsAreReachableAndRespectWalkingPreference() {
     for (String id : List.of("devghat", "maulakalika", "meghauli", "sauraha-riverfront")) {
       Activity activity = catalog.get(id);

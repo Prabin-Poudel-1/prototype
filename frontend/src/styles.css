@@ -348,7 +348,8 @@ h1 em {
   color: #3c5255;
 }
 .preferences-card select,
-.preferences-card input[type="date"] {
+.preferences-card input[type="date"],
+.preferences-card input[type="time"] {
   border: 1px solid #dfe6e5;
   border-radius: 7px;
   padding: 11px 9px;
@@ -356,7 +357,17 @@ h1 em {
   width: 100%;
   color: #3a5054;
   font-size: 12px;
-  min-height: 40px;
+  min-height: 44px;
+  height: 44px;
+  min-width: 0;
+}
+.preferences-card select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 24px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2365756d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 9px center;
 }
 .input-icon {
   position: relative;
@@ -364,17 +375,18 @@ h1 em {
 .input-icon svg {
   position: absolute;
   left: 10px;
-  top: 12px;
+  top: 50%;
+  transform: translateY(-50%);
   color: #84978e;
   pointer-events: none;
 }
 .input-icon input,
 .input-icon select {
-  padding-left: 34px !important;
+  padding-left: 30px !important;
 }
 .field-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 10px;
   margin-top: 20px;
 }
@@ -1233,7 +1245,8 @@ fieldset {
     font-size: 14px;
   }
   .preferences-card select,
-  .preferences-card input[type="date"] {
+  .preferences-card input[type="date"],
+  .preferences-card input[type="time"] {
     font-size: 14px;
   }
   .field-help {
@@ -1547,7 +1560,8 @@ fieldset {
     font-size: 13px;
   }
   .preferences-card select,
-  .preferences-card input[type="date"] {
+  .preferences-card input[type="date"],
+  .preferences-card input[type="time"] {
     font-size: 16px;
     min-height: 44px;
   }
@@ -1716,7 +1730,8 @@ fieldset {
   font-size: 14px;
 }
 .preferences-card select,
-.preferences-card input[type="date"] {
+.preferences-card input[type="date"],
+.preferences-card input[type="time"] {
   font-size: 14px;
 }
 .section-title p,
@@ -1834,7 +1849,8 @@ fieldset {
 }
 @media (max-width: 760px) {
   .preferences-card select,
-  .preferences-card input[type="date"] {
+  .preferences-card input[type="date"],
+  .preferences-card input[type="time"] {
     font-size: 16px;
   }
   .stop-info h4 {
@@ -2346,4 +2362,46 @@ fieldset {
     height: 170px;
   }
 }
-.destination-source { display: inline-block; font-size: 12px; color: #35664c; margin: 4px 0 12px; text-underline-offset: 3px; }
+.destination-source {
+  display: inline-block;
+  font-size: 12px;
+  color: #35664c;
+  margin: 4px 0 12px;
+  text-underline-offset: 3px;
+}
+.trip-field-note {
+  font-size: 11px;
+  line-height: 1.6;
+  color: #65756d;
+  margin: 8px 0 18px;
+}
+.trip-day-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 12px 20px;
+  border-bottom: 1px solid #e3eade;
+}
+.trip-day-tabs button {
+  border: 1px solid #dce5d7;
+  border-radius: 10px;
+  background: #fff;
+  padding: 10px 14px;
+  min-width: 112px;
+  text-align: left;
+  color: #375c48;
+  flex-shrink: 0;
+}
+.trip-day-tabs button span {
+  display: block;
+  font-size: 11px;
+  margin-top: 4px;
+}
+.trip-day-tabs button[aria-pressed="true"] {
+  background: #eaf3de;
+  border-color: #719474;
+}
+.trip-day-tabs button:focus-visible {
+  outline: 3px solid #719474;
+  outline-offset: 2px;
+}

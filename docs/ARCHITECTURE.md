@@ -23,7 +23,7 @@ Hard requirements:
 
 The current score rewards main-interest activities (110 points), other activities (35), and previously planned activities during recovery (90). It subtracts integer penalties for total elapsed time and cost. Ties prefer lower cost. These are transparent prototype weights, not learned or scientifically calibrated preferences.
 
-The search is exhaustive within the small catalogue and three-stop cap, not a scalable citywide optimizer. Recovery favours preserving activity membership, but does **not** minimize edit distance, preserve original timings, honour external bookings, or lock completed activities. It replans the full sample day from the base at 08:00. Those are explicit future tasks.
+The search is exhaustive within the small catalogue and three-stop cap, not a scalable citywide optimizer. Recovery favours preserving activity membership, but does **not** minimize edit distance, preserve original timings, honour external bookings, or lock completed activities. It replans the full trip from the base at the selected daily start time. Those are explicit future tasks.
 
 ## Persistence and recovery
 
@@ -77,7 +77,7 @@ Responses: 400 for invalid preferences, 404 for unknown trip, 409 for stale prev
 
 ## Testing performed
 
-- Six planner tests, including one sweep of 160 combinations of group size, budget and duration.
+- Ten planner tests, including one sweep of 160 combinations of group size, budget and duration.
 - Two service integration tests covering persistence, cancellation detection, explicit acceptance, stale revision and changed-availability rejection.
 - Production TypeScript/Vite build.
 - Browser walkthrough: create a birdwatching plan, cancel a planned activity, preview recovery, accept, reload saved trip.
@@ -85,3 +85,14 @@ Responses: 400 for invalid preferences, 404 for unknown trip, 409 for stale prev
 - Browser console showed no errors during the walkthrough.
 
 Not verified: PostgreSQL runtime, location permission on actual mobile devices, production hosting, real operator integration, external routing correctness or any real travel outcome.
+
+## Multiple days
+
+Daily feasible sequences are grouped by visited activity IDs and reduced to
+cost/score Pareto alternatives. A dynamic program combines disjoint daily sets
+for the requested 1–5 days, retaining nondominated cost/score alternatives per
+visited set and enforcing the total budget. Focus and required culture are checked
+across the complete trip. Every day is nonempty; each returns to the same base.
+The root plan holds totals and flattened stops for recovery compatibility, plus
+a `days` list with dates and individual plans. Legacy JSON defaults are supported.
+Opening windows and availability are still fixed sample data, not date-specific.
